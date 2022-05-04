@@ -11,7 +11,7 @@ export const Rotas = () => {
             <Routes>
                 <Route path='/' element={<Home/>} />
                 <Route path='/Pokedex' element={<Pokedex/>} />
-                <Route path='/Detalhes' element={<Detalhes/>} />
+                <Route path='/Detalhes/:id' element={<Detalhes/>} />
             </Routes>
         </BrowserRouter>
     )
