@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "./Card";
 import styled from 'styled-components'
 import { createGlobalStyle } from "styled-components";
+import { UseRequestData } from "../Hooks/UseRequestData";
 
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
-    background: teal;
+    background: #000000;
     box-sizing: border-box;
   }
 `;
@@ -24,7 +25,7 @@ const HeaderBonito = styled.div`
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
-    background-color: red;
+    background-color: #FF4500;
     button{
         border-radius: 6px;
         cursor: pointer;
@@ -43,6 +44,10 @@ export const Home = () => {
         navigate('/Pokedex')
     }
 
+    const pokemons = UseRequestData('https://pokeapi.co/api/v2/pokemon?limit=30')
+    console.log(pokemons && pokemons[0].results)
+
+
     return(
         <div>
             <HeaderBonito>
@@ -50,9 +55,9 @@ export const Home = () => {
                 <h2>Home</h2>
             </HeaderBonito>
             <ContainerCards>
-                <Card /><Card /><Card /><Card /><Card /><Card /><Card />
-                <Card /><Card /><Card /><Card /><Card /><Card /><Card />
-                <Card /><Card /><Card /><Card /><Card /><Card /><Card />               
+                {pokemons && pokemons[0].results && pokemons[0].results.map((pokemons)=>{
+                    return <Card pokemons={pokemons} />;
+                })}
             </ContainerCards>
             <GlobalStyle/>
         </div>
