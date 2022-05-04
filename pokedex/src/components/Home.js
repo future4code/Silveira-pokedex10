@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "./Card";
 import styled from 'styled-components'
 import { createGlobalStyle } from "styled-components";
-import { UseRequestData } from "../Hooks/UseRequestData";
+import { useRequestData } from "../Hooks/useRequestData";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -44,8 +44,8 @@ export const Home = () => {
         navigate('/Pokedex')
     }
 
-    const pokemons = UseRequestData('https://pokeapi.co/api/v2/pokemon?limit=30')
-    console.log(pokemons && pokemons[0].results)
+    const pokemons = useRequestData('https://pokeapi.co/api/v2/pokemon?limit=30')
+    console.log()
 
 
     return(
@@ -55,9 +55,8 @@ export const Home = () => {
                 <h2>Home</h2>
             </HeaderBonito>
             <ContainerCards>
-                {pokemons && pokemons[0].results && pokemons[0].results.map((pokemons)=>{
-                    return <Card pokemons={pokemons} />;
-                })}
+                <Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/>
+                <Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/>
             </ContainerCards>
             <GlobalStyle/>
         </div>
