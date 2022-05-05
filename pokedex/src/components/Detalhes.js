@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import styled from 'styled-components'
-import { useRequestData } from "../Hooks/useRequestData";
+import { useRequestData } from "../Hooks/UseRequestData";
 
 const SessaoDado = styled.div`
     display: flex;

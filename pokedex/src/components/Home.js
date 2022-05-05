@@ -1,64 +1,64 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card } from "./Card";
-import styled from 'styled-components'
-import { createGlobalStyle } from "styled-components";
-import { useRequestData } from "../Hooks/useRequestData";
-
-const GlobalStyle = createGlobalStyle`
-  body {
-    margin: 0;
-    padding: 0;
-    background: #000000;
-    box-sizing: border-box;
-  }
-`;
-
-const ContainerCards = styled.div`
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 10px 10px;
-`
-const HeaderBonito = styled.div`
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    background-color: #FF4500;
-    button{
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: bold;
-        margin: 0px 20px 0px 20px;
-        height: 30px;
-        align-self: center;
-    }
-`
+import { GlobalContext } from "../contexts/GlobalContext";
+import { Detalhes } from "./Detalhes";
+import { getPokemons } from "../request/requests";
+import { PokemonList, PokemonCard } from './Styles'
 
 export const Home = () => {
     const navigate = useNavigate()
+    const { states, setters } = useContext(GlobalContext)
+    const { pokemonsPokedex, pokemonsHome } = states
+    const { setPokemonPokedex, setPokemonsHome } = setters
+
+    useEffect(() => {
+        getPokemons()
+    }, [])
 
     const goPokedex = () => {
         navigate('/Pokedex')
     }
 
-    const pokemons = useRequestData('https://pokeapi.co/api/v2/pokemon?limit=30')
-    console.log()
+    const addToPokedex = (poke) => {
+        const newPokemonsPokedex = [...pokemonsPokedex];
+        const newPokemons = [...pokemonsHome]
+        const index = pokemonsHome.indexOf(poke)
+        const position = pokemonsPokedex.findIndex((item) => {
+            return item.name === poke.name;
+        })
+        if (position === -1) {
+            newPokemonsPokedex.push(poke)
+            setPokemonPokedex(newPokemonsPokedex)
+        }
+        if (index > -1) {
+            newPokemons.splice(index, 1)
+            setPokemonsHome([...newPokemons])
+        }
+    }
 
+    const renderPokemons = pokemonsHome.map((pokemon) => {
+            return (
+                <PokemonCard key={pokemon.name}>
+                    <p>{pokemon.name}</p>
+                    <img src={pokemon.sprites.other.dream_world.front_default} alt={pokemon.name} />
+                    <div>
+                        <button onClick={() => addToPokedex(pokemon)}>Adicionar Pokedex</button>
+                        <button onClick={() => Detalhes()}>Ir para Detalhes</button>
+                    </div>
+                </PokemonCard>
+            )
+        })
 
-    return(
+    return (
         <div>
-            <HeaderBonito>
-                <button onClick={goPokedex}>Ir Para Pokedex</button>
-                <h2>Home</h2>
-            </HeaderBonito>
-            <ContainerCards>
-                <Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/>
-                <Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/><Card/>
-            </ContainerCards>
-            <GlobalStyle/>
+            <div>
+                <h1>Lista de Pokemons</h1>
+                <button onClick={goPokedex}> Ir para Pokedex </button>
+                <PokemonList>
+                    {renderPokemons}
+                </PokemonList>
+            </div>
         </div>
+
     )
 }

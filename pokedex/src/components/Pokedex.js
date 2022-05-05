@@ -1,56 +1,82 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { createGlobalStyle } from "styled-components";
-import styled from 'styled-components'
-
-const GlobalStyle = createGlobalStyle`
-  body {
-    margin: 0;
-    padding: 0;
-    background: teal;
-    box-sizing: border-box;
-  }
-`
-
-const ContainerCards = styled.div`
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 10px 10px;
-`
-const HeaderBonito = styled.div`
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    background-color: red;
-    width:100%;
-    button{
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: bold;
-        margin: 0px 20px 0px 20px;
-        height: 30px;
-        align-self: center;
-    }
-`
+import { GlobalContext } from "../contexts/GlobalContext";
+import { PokedexContext } from "../contexts/PokedexContext";
+import { getPokemons } from "../request/requests";
 
 export const Pokedex = () => {
     const navigate = useNavigate()
+    const [image , setImage] = useState("")
+    const { states, setters } = useContext(GlobalContext)
+    const { pokemonsPokedex, pokemonsHome } = states
+    const { setPokemons, setPokemonPokedex , setPokemonsHome } = setters
+    const [ imageContainer, setImageContainer ] = useState('')
 
     const goBack = () => {
         navigate(-1)
     }
-    return(
+
+    const renderPokemonsList = pokemonsPokedex.map((pokemon) => {
+        return (
+            <div key={pokemon.name}>
+                <div onClick={() => onClickImage(pokemon)}>
+                    <img src={pokemon.sprites.versions["generation-viii"].icons.front_default} alt='Pokemon Icone'/>
+                    <p>{pokemon.name}</p>
+                </div>
+            </div>
+        )
+    })
+
+    const removeFromPokedex = (pokemon) => {
+        const newPokemonsPokedex = [...pokemonsPokedex]
+        const index = pokemonsPokedex.findIndex(
+            (item) => item.name === pokemon.name);
+
+        newPokemonsPokedex.splice(index, 1)
+        setPokemonPokedex(newPokemonsPokedex)
+
+        const newPokemons = [...pokemonsHome, pokemon];
+        const orderedPokemons = newPokemons.sort((a, b) => 
+        {return a.id - b.id; })
+        setPokemonsHome(orderedPokemons)
+        setImageContainer('')
+    }
+
+    const CleanPokedex = () => {
+        setPokemonPokedex([])
+        getPokemons(setPokemons)
+        setImageContainer('')
+    }
+
+    const onClickImage = (pokemon) => {
+        setImageContainer(
+            <div>
+                <img src={pokemon.sprites.other.dream_world.front_default} alt={pokemon.name} />
+                    <button onClick={() => removeFromPokedex(pokemon)}>Remover</button>
+                    <button>Detalhes</button> 
+            </div>
+        )
+    }
+
+    return (
+        <PokedexContext.Provider value={{image , setImage}}>
         <div>
-            <ContainerCards>
-                <HeaderBonito>
-                    <button onClick={goBack}>Voltar</button>
-                    <h2>Pokedex</h2>
-                </HeaderBonito>
-                </ContainerCards>
-            <GlobalStyle/>
+            <button onClick={goBack}>Voltar</button>
+            <h2>Pokedex</h2>
         </div>
+        <div>
+            <div>
+                <button onClick={CleanPokedex}>Limpar Tela</button>
+            </div>
+            <div>
+                <div>
+                    {imageContainer}
+                </div>
+                <div>
+                    {renderPokemonsList}
+                </div>
+            </div>
+        </div>
+    </PokedexContext.Provider>
     )
 }
