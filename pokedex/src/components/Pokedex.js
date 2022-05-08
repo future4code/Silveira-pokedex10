@@ -11,7 +11,7 @@ const Titulo = styled.h1`
 `;
 
 const Body = styled.div`
-  min-height: auto;
+  min-height: 550px;
 `;
 
 const Botao = styled.button`
@@ -93,14 +93,12 @@ export const Pokedex = () => {
     <>
       <div></div>
       <div>
-        <div>
+        <Body>
           <Titulo>Pokedex</Titulo>
           <Botao onClick={CleanPokedex}>Limpar Tela</Botao>
-        </div>
-        <div>
           <div>{renderPokemonsList}</div>
           <Botao onClick={goBack}>Voltar</Botao>
-        </div>
+        </Body>
       </div>
     </>
   );
