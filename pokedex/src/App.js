@@ -3,26 +3,28 @@ import { GlobalContext } from "./contexts/GlobalContext";
 import { getPokemons } from "./request/requests";
 import { url } from "./constants/url";
 import axios from "axios";
-import { Rotas } from './rotas/Rotas'
-import { Header, WebSite } from './HeaderFooter/Header'
-import { Footer } from './HeaderFooter/Footer'
-
+import { Rotas } from "./rotas/Rotas";
+import { Header, WebSite } from "./HeaderFooter/Header";
+import { Footer } from "./HeaderFooter/Footer";
+import "./App.css";
 
 const App = () => {
+  const [pokemons, setPokemons] = useState([]);
+  const [pokemonDetails, setPokemonDetails] = useState({});
+  const [pokemonsPokedex, setPokemonPokedex] = useState([]);
+  const [pokemonsHome, setPokemonsHome] = useState([]);
 
-  const [pokemons, setPokemons] = useState([])
-  const [pokemonDetails, setPokemonDetails] = useState({})
-  const [pokemonsPokedex, setPokemonPokedex] = useState([])
-  const [pokemonsHome, setPokemonsHome] = useState([])
-
-  const states = { pokemons, pokemonDetails, pokemonsPokedex, pokemonsHome }
-  const setters = { setPokemons, setPokemonDetails, setPokemonPokedex, setPokemonsHome }
-
+  const states = { pokemons, pokemonDetails, pokemonsPokedex, pokemonsHome };
+  const setters = {
+    setPokemons,
+    setPokemonDetails,
+    setPokemonPokedex,
+    setPokemonsHome,
+  };
 
   useEffect(() => {
-    getPokemons(setPokemons)
-  }, [])
-
+    getPokemons(setPokemons);
+  }, []);
 
   useEffect(() => {
     const newList = [];
@@ -46,12 +48,12 @@ const App = () => {
   return (
     <GlobalContext.Provider value={{ states, setters }}>
       <WebSite>
-      <Header />
-      <Rotas />
-      <Footer />
+        <Header />
+        <Rotas />
+        <Footer />
       </WebSite>
     </GlobalContext.Provider>
   );
-}
+};
 
 export default App;

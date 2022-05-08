@@ -4,6 +4,7 @@ const FooterContainer = styled.div`
     grid-area: footer;
     background-color: #424B54;
     text-align: center;
+    max-height: 80px;
 `
 
 export function Footer() {
